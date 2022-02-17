@@ -1,8 +1,8 @@
 from app.configs.database import db
-from app.models.tasks_categories import tasks_categories
+from app.exc.invalid_keys import EmpytKey, InvalidKeys, InvalidUpdatedKeys
 
 from sqlalchemy import Column, String, Integer, Text
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import validates
 from dataclasses import dataclass
 
 @dataclass
@@ -17,4 +17,16 @@ class CategoriesModel(db.Model):
     name = Column(String(100), nullable=False, unique=True)
     description = Column(Text)
 
-    tasks = relationship("TasksModel", secondary=tasks_categories, backref="categories")
+    @classmethod
+    def check_key_name(cls, data: dict):
+        keys = data.keys()
+        if not 'name' in keys:
+            raise InvalidKeys(data)
+        if len(data['name']) == 0:
+            raise EmpytKey
+    
+    @classmethod
+    def check_data_update(cls, data: dict):
+        keys = data.keys()
+        if not 'name' or not 'description' in keys:
+            raise InvalidUpdatedKeys(data)
