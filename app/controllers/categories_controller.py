@@ -32,7 +32,8 @@ def update_category(category_id: int):
     session = current_app.db.session
     try:
          
-        query_category: CategoriesModel = CategoriesModel.query.get_or_404(category_id, description = "category not found!")
+        query_category: CategoriesModel = CategoriesModel.query.get_or_404(
+            category_id, description = "category not found!")
             
         data = request.get_json()
         data = processing_values(data)
@@ -50,3 +51,12 @@ def update_category(category_id: int):
     except InvalidUpdatedKeys as error:
         return jsonify(error.message), HTTPStatus.BAD_REQUEST
    
+def delete_category(category_id: int):
+    session = current_app.db.session
+    query_category: CategoriesModel = CategoriesModel.query.get_or_404(
+            category_id, description = "category not found!")
+        
+    session.delete(query_category)
+    session.commit()
+        
+    return "", HTTPStatus.NO_CONTENT
