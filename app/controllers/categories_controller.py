@@ -60,3 +60,19 @@ def delete_category(category_id: int):
     session.commit()
         
     return "", HTTPStatus.NO_CONTENT
+
+def get_all_categories():
+
+    categories = CategoriesModel.query.all()
+    categories_list = list()
+
+    for category in categories:
+        categories_list.append(
+            {
+                "id": category.id,
+                "name": category.name,
+                "description": category.description,
+                "tasks": category.tasks
+            }
+        )
+    return jsonify(categories_list), HTTPStatus.OK

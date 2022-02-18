@@ -23,4 +23,5 @@ def check_categories(data: list, task: TasksModel):
             db_category = CategoriesModel(name=category)
             session.add(db_category)
             session.commit()
+
         task.categories.append(db_category)
