@@ -20,12 +20,12 @@ def create_taks():
         eisenhower_category = match_priority(new_task.importance, new_task.urgency)
         eisenhower_type: EisenhowerModel = EisenhowerModel.query.filter_by(type=eisenhower_category).one()
         new_task.eisenhower_id = eisenhower_type.id
-
-        session.add(new_task)
-        session.commit()
         
         check_categories(data=categories, task=new_task)
         categories_list = [category.name for category in new_task.categories]
+
+        session.add(new_task)
+        session.commit()
         
         final_response = {
             "id": new_task.id,
